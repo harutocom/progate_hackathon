@@ -21,13 +21,13 @@ export default function BingoPage() {
       <div className="w-full h-[184px] pt-3 flex items-center justify-center">
         {!card ? (
           <Link href="/bingo/create">
-            <button className="bg-[#0D80F2] text-white w-[480px] h-[48px] rounded-[8px] px-[20px] hover:bg-[#0D80F2]/90">
+            <button className="bg-[#0D80F2] text-white w-[480px] h-[48px] rounded-[8px] px-[20px] hover:bg-[#0D80F2]/90 cursor-pointer">
               新しいビンゴカードを生成
             </button>
           </Link>
         ) : (
           <Link href="/bingo/create">
-            <button className="bg-[#0D80F2] text-white w-[480px] h-[48px] rounded-[8px] px-[20px] hover:bg-[#0D80F2]/90">
+            <button className="bg-[#0D80F2] text-white w-[480px] h-[48px] rounded-[8px] px-[20px] hover:bg-[#0D80F2]/90 cursor-pointer">
               続きからプレイ
             </button>
           </Link>
