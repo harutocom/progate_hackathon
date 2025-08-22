@@ -13,7 +13,7 @@ export default function BingoPage() {
   return (
     <div className="w-[960px] max-w-[960px] h-[669px] py-5 mx-auto">
       <div className="w-full h-[221px] pt-5 flex items-center justify-center">
-        <p className="text-center text-lg font-medium">
+        <p className="tfont-manrope font-bold text-[28px] leading-[35px] text-center">
           ビンゴカードをはじめる
         </p>
       </div>
