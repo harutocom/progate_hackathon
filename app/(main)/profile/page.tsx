@@ -1,6 +1,6 @@
 import React from "react";
-import { Avatar, AvatarImage } from "../../components/ui/avatar";
-import { Button } from "../../components/ui/button";
+import { Avatar, AvatarImage } from "../../../components/ui/avatar";
+import { Button } from "../../../components/ui/button";
 import {
   Table,
   TableBody,
