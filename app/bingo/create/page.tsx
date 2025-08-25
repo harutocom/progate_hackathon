@@ -77,8 +77,8 @@ export default function BingoCreatePage() {
   }, [card]);
 
   return (
-    <div className="w-full h-[130vh] py-5 mx-auto bg-[#fffde7]">
-      <div className=" pt-5 items-center relative z-10 w-full max-w-4xl mx-auto text-center">
+    <div className="w-full h-[130vh] py-5 mx-auto bg-[#fffde7] mt-[65px]">
+      <div className=" pt-5 items-center relative z-0 w-full max-w-4xl mx-auto text-center">
         <h1 className="font-display text-4xl sm:text-5xl md:text-6xl font-bold text-[var(--text-primary)] mb-4">
           夏休みToDoビンゴ
         </h1>
