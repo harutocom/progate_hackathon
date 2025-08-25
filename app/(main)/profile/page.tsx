@@ -33,12 +33,12 @@ const tasks = [
 
 const ProfilePage = () => {
   return (
-    <div className="profile-container flex flex-col bg-[#E5E8EB] justify-center max-w-[1440px] mt-[100px]">
+    <div className="profile-container flex flex-col bg-[#E5E8EB] justify-center max-w-[1440px] mt-[65px]">
       <div className="profile-icon-container flex flex-col items-center mb-6">
         <h2 className="profile-title text-[60px] mb-[50px] font-[Manrope]">
           Profile
         </h2>
-        <Avatar>
+        <Avatar className="size-32">
           <AvatarImage src="https://github.com/shadcn.png" />
         </Avatar>
         <h1 className="text-[30px] font-[inter] mt-10 mb-12">{profile[0].name}</h1>
