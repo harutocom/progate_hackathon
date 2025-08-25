@@ -11,9 +11,9 @@ export default function BingoPage() {
   const [card, setCard] = useState<BingoCard | null>(null);
 
   return (
-    <div className="w-[960px] max-w-[960px] h-[669px] py-5 mx-auto">
+    <div className="w-[max] max-w-[max] h-[130vh] py-5 mx-auto  bg-[#fffde7]">
       <div className="w-full h-[221px] pt-5 flex items-center justify-center">
-        <p className="tfont-manrope font-bold text-[28px] leading-[35px] text-center">
+        <p className="font-[manrope] font-bold text-[28px] leading-[35px] text-center">
           ビンゴカードをはじめる
         </p>
       </div>
