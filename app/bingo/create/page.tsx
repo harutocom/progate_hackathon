@@ -87,7 +87,6 @@ export default function BingoCreatePage() {
         </p>
       </div>
 
-      {/* ボタン */}
       <div className="pt-3 flex flex-col items-center justify-center">
         {!card || bingoAchieved ? (
           <Button
@@ -97,7 +96,6 @@ export default function BingoCreatePage() {
             新しいビンゴカードを生成
           </Button>
         ) : null}
-
         {bingoAchieved && (
           <p className="text-3xl font-bold text-[#FFD700] mt-4">🎉 ビンゴ 🎉</p>
         )}
