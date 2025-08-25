@@ -33,29 +33,31 @@ const tasks = [
 
 const ProfilePage = () => {
   return (
-    <div className="profile-container flex flex-col bg-E5E8EB p-8 rounded-lg w-full mt-[100px]">
+    <div className="profile-container flex flex-col bg-[#E5E8EB] justify-center max-w-[1440px] mt-[100px]">
       <div className="profile-icon-container flex flex-col items-center mb-6">
-        <h2 className="profile-title text-8xl mb-[50px]">Profile</h2>
+        <h2 className="profile-title text-[60px] mb-[50px] font-[Manrope]">
+          Profile
+        </h2>
         <Avatar>
           <AvatarImage src="https://github.com/shadcn.png" />
         </Avatar>
-        <h1 className="text-[30px] font-bold mt-10 mb-12">{profile[0].name}</h1>
+        <h1 className="text-[30px] font-[inter] mt-10 mb-12">{profile[0].name}</h1>
       </div>
 
       <div className="my-bingo-card">
         <div className="title-wrapper items-start pl-[300px]">
-          <h2 className="bingo-title text-[80px] mb-4">My Bingo Cards</h2>
-          <p className="comment mb-4 text-[40px]">
+          <h2 className="bingo-title text-[30px] mb-4 font-[inter]">My Bingo Cards</h2>
+          <p className="comment mb-4 text-[20px]">
             Here are all the bingo cards you&apos;ve created.
           </p>
-          <h2 className="name text-[30px]">Created by: {profile[0].name}</h2>
+          <h2 className="name text-[25px]">Created by: {profile[0].name}</h2>
         </div>
 
-        <div className="bingo-card ml-[300px] w-[1500px] mt-[150px] border border-[#CFD9E8] rounded-lg overflow-hidden">
+        <div className="bingo-card ml-[300px] w-[900px] mt-[150px] border border-[#CFD9E8] rounded-lg overflow-hidden">
           <Table>
             <TableHeader>
               <TableRow>
-                <TableHead className="w-[700px] h-[100px] pl-[30px]">
+                <TableHead className="w-[400px] h-[100px] pl-[30px]">
                   Date
                 </TableHead>
                 <TableHead className="ml-[650px] h-[100px]">Task</TableHead>
