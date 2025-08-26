@@ -13,7 +13,7 @@ export function getPool(): Pool {
 
 export async function query(
   text: string,
-  params?: (string | number | number[] | boolean | null)[]
+  params?: (string | number | boolean | null)[]
 ) {
   const pool = getPool();
   return pool.query(text, params);
