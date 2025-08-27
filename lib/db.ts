@@ -4,8 +4,19 @@ let pool: Pool | null = null;
 
 export function getPool(): Pool {
   if (!pool) {
+    const databaseUrl = process.env.DATABASE_URL;
+
+    if (
+      !databaseUrl ||
+      typeof databaseUrl !== "string" ||
+      databaseUrl.trim() === ""
+    ) {
+      throw new Error(
+        "Environment variable DATABASE_URL is missing or invalid. Please set it to a valid PostgreSQL connection string."
+      );
+    }
     pool = new Pool({
-      connectionString: process.env.DATABASE_URL,
+      connectionString: databaseUrl,
     });
   }
   return pool;
