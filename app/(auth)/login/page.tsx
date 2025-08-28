@@ -53,6 +53,12 @@ export default function LoginPage() {
           <Button className="w-[480px] h-[48px] rounded-md bg-[#0D80F2] text-white">
             Log In
           </Button>
+          <p className="text-sm text-gray-500">
+            Don't have an account?{" "}
+            <a href="/setup" className="text-blue-500">
+              Sign up
+            </a>
+          </p>
         </form>
       </div>
     </div>

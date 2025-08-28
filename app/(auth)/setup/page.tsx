@@ -64,12 +64,12 @@ export default function SetupPage() {
           <Button className="w-[480px] h-[48px] rounded-md bg-[#0D80F2] text-[#F7FAFC]">
             Create Account
           </Button>
-          <Button
-            asChild
-            className="w-[480px] h-[48px] rounded-md bg-[#E8EDF5] text-[#0D141C]"
-          >
-            <Link href="/login">Log In</Link>
-          </Button>
+          <p className="text-sm text-gray-500">
+            Already have an account?{" "}
+            <a href="/login" className="text-blue-500">
+              Log in
+            </a>
+          </p>
         </form>
       </div>
     </div>
