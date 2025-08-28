@@ -20,6 +20,9 @@ export const BingoCardList = ({
   cards,
   tasks,
 }: BingoCardListProps) => {
+  const formatDate = (dateString: string) => {
+    return new Date(dateString).toISOString().split("T")[0];
+  };
   return (
     <div className="my-bingo-card">
       <div className="title-wrapper items-start pl-[300px]">
@@ -46,7 +49,7 @@ export const BingoCardList = ({
             {cards.map((card) => (
               <TableRow key={card.id}>
                 <TableCell className="font-medium h-[200px] pl-[30px]">
-                  {card.date}
+                  {formatDate(card.date)}
                 </TableCell>
                 <TableCell className="h-[200px] ml-[700px] whitespace-normal break-words">
                   {tasks[card.id]
