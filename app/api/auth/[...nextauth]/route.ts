@@ -49,6 +49,9 @@ const handler = NextAuth({
       },
     }),
   ],
+  pages: {
+    signIn: "/login", // ★ この一行を追加
+  },
   secret: process.env.AUTH_SECRET,
 });
 
