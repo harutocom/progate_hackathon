@@ -11,7 +11,7 @@ export default function Header() {
         <p className="font-jakarta font-bold">夏のビンゴ </p>
       </div>
       <Link href="/profile" className="mr-[32px]">
-        <Button variant="ghost" size="icon">
+        <Button variant="ghost" size="icon" className="cursor-pointer">
           <Avatar>
             <AvatarImage src="https://github.com/shadcn.png" />
             <AvatarFallback>CN</AvatarFallback>
