@@ -13,38 +13,30 @@ type BingoCard = {
   createdAt: Date;
   tasks: Task[];
 };
-
-const initialTasks = [
-  "スイカ割りをする",
-  "線香花火をする",
-  "かき氷を食べる",
-  "海に行く",
-  "花火大会に行く",
-  "プールで遊ぶ",
-  "夏祭りに行く",
-  "キャンプをする",
-  "日焼け止めを塗る",
-];
-
+import { useParams } from "next/navigation";
 export default function BingoCreatePage() {
+  const params = useParams<{ id: string }>();
   const [card, setCard] = useState<BingoCard | null>(null);
   const [bingoAchieved, setBingoAchieved] = useState(false);
+  useEffect(() => {
+    const fetchCard = async () => {
+      const res = await fetch(`/api/bingocard/${params.id}`, {
+        method: "GET",
+        credentials: "include",
+      });
+      const data = await res.json();
+      setCard(data);
+    };
+    fetchCard();
+  }, [params.id]);
 
-  const generateCard = () => {
-    const tasks: Task[] = initialTasks
-      .sort(() => Math.random() - 0.5)
-      .slice(0, 9)
-      .map((text, index) => ({
-        id: `${index}`,
-        text,
-        done: false,
-      }));
-
-    setCard({
-      id: Date.now().toString(),
-      createdAt: new Date(),
-      tasks,
+  const generateCard = async () => {
+    const res = await fetch("/api/bingocard", {
+      method: "POST",
+      credentials: "include",
     });
+    const data = await res.json();
+    setCard(data);
     setBingoAchieved(false);
   };
 
