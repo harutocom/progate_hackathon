@@ -2,12 +2,10 @@ import React from "react";
 import { getProfilePageData } from "@/lib/data-fetcher";
 import { ProfileMain } from "@/components/profile-main";
 import { BingoCardList } from "@/components/bingo-card-list";
-import { Button } from "@/components/ui/button";
-import Link from "next/link";
+import BackButton from "@/components/backButton";
 
 export default async function ProfilePage() {
   const userId = 1;
-
   const { user, cards, tasks } = await getProfilePageData(userId);
 
   return (
@@ -16,12 +14,7 @@ export default async function ProfilePage() {
       <BingoCardList username={user.username} cards={cards} tasks={tasks} />
 
       <div className="flex items-center gap-2 flex-col mt-[100px]">
-        <Button
-          asChild
-          className="w-[372px] h-[48px] bg-[#0D80F2] text-white hover:bg-[#0D80F2]/90 cursor-pointer"
-        >
-          <Link href="/profile">return page</Link>
-        </Button>
+        <BackButton />
       </div>
     </div>
   );
