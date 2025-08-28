@@ -1,9 +1,9 @@
 import { NextResponse } from "next/server";
 import { query } from "@/lib/db";
-import { getAuthUser } from "@/lib/auth"; // ← 認証ヘルパー想定
+import { NextAuth } from "@/lib/auth"; // ← 認証ヘルパー想定
 
 export async function GET() {
-  const user = await getAuthUser();
+  const user = await NextAuth();
   if (!user) return NextResponse.json({ error: "認証エラー" }, { status: 401 });
 
   const result = await query(

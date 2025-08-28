@@ -1,7 +1,7 @@
 "use client";
 import React, { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
-
+import { useParams } from "next/navigation";
 type Task = {
   id: string;
   text: string;
@@ -13,7 +13,6 @@ type BingoCard = {
   createdAt: Date;
   tasks: Task[];
 };
-import { useParams } from "next/navigation";
 export default function BingoCreatePage() {
   const params = useParams<{ id: string }>();
   const [card, setCard] = useState<BingoCard | null>(null);
