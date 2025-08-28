@@ -1,5 +1,3 @@
-// app/api/auth/[...nextauth]/route.ts
-
 import NextAuth from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 import { query } from "@/lib/db";
@@ -21,7 +19,6 @@ const handler = NextAuth({
           return null;
         }
 
-        // DBからユーザーを検索
         const { rows } = await query(
           'SELECT * FROM "user" WHERE username = $1',
           [credentials.username]
@@ -30,14 +27,12 @@ const handler = NextAuth({
 
         if (!user) return null;
 
-        // 入力されたパスワードとDBのハッシュ化されたパスワードを比較
         const isPasswordCorrect = await bcrypt.compare(
           credentials.password,
           user.password
         );
 
         if (isPasswordCorrect) {
-          // 正しければユーザー情報を返す
           return {
             id: user.id.toString(),
             name: user.username,
@@ -50,7 +45,7 @@ const handler = NextAuth({
     }),
   ],
   pages: {
-    signIn: "/login", // ★ この一行を追加
+    signIn: "/login",
   },
   secret: process.env.AUTH_SECRET,
 });

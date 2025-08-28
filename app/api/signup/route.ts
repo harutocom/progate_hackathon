@@ -1,5 +1,3 @@
-// app/api/signup/route.ts
-
 import { NextResponse } from "next/server";
 import { query } from "@/lib/db";
 import bcrypt from "bcrypt";
@@ -8,7 +6,6 @@ export async function POST(request: Request) {
   try {
     const { username, email, password } = await request.json();
 
-    // バリデーション
     if (!username || !email || !password) {
       return NextResponse.json(
         { error: "必須項目が不足しています" },
@@ -16,7 +13,6 @@ export async function POST(request: Request) {
       );
     }
 
-    // ユーザー名・メールアドレスの重複チェック
     const { rows: existingUsers } = await query(
       'SELECT * FROM "user" WHERE email = $1 OR username = $2',
       [email, username]
@@ -28,10 +24,8 @@ export async function POST(request: Request) {
       );
     }
 
-    // パスワードをハッシュ化
     const hashedPassword = await bcrypt.hash(password, 10);
 
-    // 新規ユーザーをデータベースに登録
     const { rows: newUser } = await query(
       'INSERT INTO "user" (username, email, password) VALUES ($1, $2, $3) RETURNING id, username, email',
       [username, email, hashedPassword]
