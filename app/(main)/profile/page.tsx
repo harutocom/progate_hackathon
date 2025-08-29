@@ -1,6 +1,7 @@
 import React from "react";
 import { Avatar, AvatarImage } from "../../../components/ui/avatar";
-import { Button } from "../../../components/ui/button";
+import BackButton from "@/components/backButton";
+
 import {
   Table,
   TableBody,
@@ -41,12 +42,16 @@ const ProfilePage = () => {
         <Avatar className="size-32">
           <AvatarImage src="https://github.com/shadcn.png" />
         </Avatar>
-        <h1 className="text-[30px] font-[inter] mt-10 mb-12">{profile[0].name}</h1>
+        <h1 className="text-[30px] font-[inter] mt-10 mb-12">
+          {profile[0].name}
+        </h1>
       </div>
 
       <div className="my-bingo-card">
         <div className="title-wrapper items-start pl-[300px]">
-          <h2 className="bingo-title text-[30px] mb-4 font-[inter]">My Bingo Cards</h2>
+          <h2 className="bingo-title text-[30px] mb-4 font-[inter]">
+            My Bingo Cards
+          </h2>
           <p className="comment mb-4 text-[20px]">
             Here are all the bingo cards you&apos;ve created.
           </p>
@@ -79,9 +84,7 @@ const ProfilePage = () => {
         </div>
 
         <div className="flex items-center gap-2 flex-col mt-[100px]">
-          <Button className="w-[372px] h-[48px] bg-[#0D80F2] text-white hover:bg-[#0D80F2]/90 cursor-pointer">
-            return page
-          </Button>
+          <BackButton />
         </div>
       </div>
     </div>
