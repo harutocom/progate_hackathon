@@ -1,4 +1,4 @@
-import { NextRequest, NextResponse } from "next/server";
+import { NextResponse } from "next/server";
 import OpenAI from "openai";
 import { query } from "@/lib/db";
 import { authOptions } from "@/app/api/auth/[...nextauth]/route";
