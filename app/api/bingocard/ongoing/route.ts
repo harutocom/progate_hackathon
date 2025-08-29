@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { query } from "@/lib/db";
-import { NextAuth } from "@/lib/auth"; // ← 認証ヘルパー想定
+import { NextAuth } from "app/api/auth/[...nextauth]/route";
 
 export async function GET() {
   const user = await NextAuth();
@@ -12,7 +12,7 @@ export async function GET() {
   );
 
   if (result.length > 0) {
-    return NextResponse.json({ ongoing: true, bingoId: result[0].id });
+    return NextResponse.json({ ongoing: true, bingoId: result.row[0].id });
   } else {
     return NextResponse.json({ ongoing: false });
   }
