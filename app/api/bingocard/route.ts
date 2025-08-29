@@ -50,7 +50,7 @@ export async function POST() {
 
   const values = tasks
     .map(
-      (_taskname:string, i:number) => [bingocardsid, taskname, i, false])
+      (taskname:string, i:number) => [bingocardsid, taskname, i, false])
     .flat();
   const placeholders = tasks
     .map(
