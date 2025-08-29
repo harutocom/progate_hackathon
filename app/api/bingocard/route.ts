@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import OpenAI from "openai";
 import { query } from "@/lib/db";
-import { authOptions } from " ../../auth/[...nextauth]/route";
+import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 import { getServerSession } from "next-auth/next";
 const openai = new OpenAI({
   baseURL: "https://openrouter.ai/api/v1",
