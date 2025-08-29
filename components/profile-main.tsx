@@ -12,7 +12,10 @@ export const ProfileMain = ({ user }: ProfileMainProps) => {
         Profile
       </h2>
       <Avatar className="size-32">
-        <AvatarImage src={user.profileimg} alt={user.username} />
+        <AvatarImage
+          src={"https://github.com/shadcn.png"}
+          alt={user.username}
+        />
       </Avatar>
       <h1 className="text-[30px] font-[inter] mt-10 mb-12">{user.username}</h1>
     </div>
