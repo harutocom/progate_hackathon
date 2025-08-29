@@ -75,7 +75,7 @@ export default function BingoCreatePage() {
       credentials: "include",
     });
   }
-}, [card]);
+}, [card,bingoAchieved]);
   return (
     <div className="w-full h-[130vh] py-5 mx-auto bg-[#fffde7] mt-[65px]">
       <div className=" pt-5 items-center relative z-0 w-full max-w-4xl mx-auto text-center">

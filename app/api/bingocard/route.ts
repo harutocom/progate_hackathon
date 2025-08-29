@@ -26,7 +26,7 @@ async function GenerateTask() {
   }
   return JSON.parse(result);
 }catch(error){
-console.error("OpenAPI orJSON parsing error:", console);
+console.error("OpenAPI orJSON parsing error:", error);
 throw new Error("タスクの生成に失敗しました");
 }
 
