@@ -1,7 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
 import OpenAI from "openai";
 import { query } from "@/lib/db";
-import { NextAuth } from "app/api/auth/[...nextauth]/route";
+import { authOptions } from " ../../auth/[...nextauth]/route";
+import { getServerSession } from "next-auth/next";
 const openai = new OpenAI({
   baseURL: "https://openrouter.ai/api/v1",
   apiKey: "process.env.OPENROUTER_API_KEY",
@@ -23,50 +24,34 @@ async function GenerateTask() {
   list = JSON.parse(result);
   return list;
 }
-export async function GET(
-  request: NextRequest,
-  { params }: { params: { id: string } }
-) {
-  const user = await NextAuth();
-  if (!user) return NextResponse.json({ error: "認証エラー" }, { status: 401 });
-  const tasks = await query(`SELECT * FROM tasks WHERE bingocardsid=$1`, [
-    params.id,
-  ]);
-  return NextResponse.json(tasks);
-}
 
-export async function POST(request: NextRequest) {
-  const user = await NextAuth();
-  if (!user) {
-    return NextResponse.json({ error: "認証エラー" }, { status: 401 });
-  }
+
+export async function POST() {
+  const session = await getServerSession(authOptions);
+if (!session || !session.user) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
   const task = await GenerateTask();
   const bingocardresult = await query(
     `
       INSERT INTO bingocards (date,userid,status) VALUES (NOW(),$1,ongoing)  
       RETURNING id`,
-    [user.id]
+    [session.id]
   );
+  const bingocardsid = bingocardresult.rows[0].id;
   const values = task
-    .map((taakname, i) => [bingocardid, taskname, i, false])
+    .map((taskname, i) => [bingocardsid, taskname, i, false])
     .flat();
-  const placeholders = task.map((_, i) =>
-    `($${i * 4 + 1}, $${i * 4 + 2}, $${i * 4 + 3}, $${i * 4 + 4})`.join(",")
-  );
-  const bingocardid = bingocardresult.row[0].id;
-  task.forEach((task, i) => {
-    values.push(bingocardid, task, i, false);
-    placeholders.push(
-      `($${values.length - 3}, $${values.length - 2}, $${values.length - 1}, $${
-        values.length
-      })`
-    );
-    await query(
-      `
+  const placeholders = task
+    .map(
+      (_, i) => `($${i * 4 + 1}, $${i * 4 + 2}, $${i * 4 + 3}, $${i * 4 + 4})`
+    )
+    .join(",");
+  await query(
+    `
       INSERT INTO tasks (bingocardsid, taskname, iscompleted, islocated)
       VALUES ${placeholders}
     `,
-      values
-    );
-  });
+    values
+  );
 }

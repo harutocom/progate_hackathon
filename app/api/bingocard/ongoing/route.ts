@@ -1,19 +1,18 @@
 import { NextResponse } from "next/server";
 import { query } from "@/lib/db";
-import { NextAuth } from "app/api/auth/[...nextauth]/route";
+import { authOptions } from "../../auth/[...nextauth]/route";
+import { getServerSession } from "next-auth/next";
 
 export async function GET() {
-  const user = await NextAuth();
-  if (!user) return NextResponse.json({ error: "認証エラー" }, { status: 401 });
+  const session = await getServerSession(authOptions);
+  if (!session || !session.user) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
 
   const result = await query(
     `SELECT id FROM bingocards WHERE userid=$1 AND status='ongoing' LIMIT 1`,
-    [user.id]
+    [session.id]
   );
-
-  if (result.length > 0) {
-    return NextResponse.json({ ongoing: true, bingoId: result.row[0].id });
-  } else {
-    return NextResponse.json({ ongoing: false });
-  }
 }
+
+

@@ -39,8 +39,14 @@ export default function BingoCreatePage() {
     setBingoAchieved(false);
   };
 
-  const toggleTask = (taskId: string) => {
+  const toggleTask = async(taskId: string) => {
     if (!card) return;
+    await fetch(`/api/tasks/${taskId}`, {
+    method: "PATCH",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ iscompleted: true }),
+    credentials: "include",
+  });
     const newTasks = card.tasks.map((task) =>
       task.id === taskId ? { ...task, done: !task.done } : task
     );
@@ -62,11 +68,14 @@ export default function BingoCreatePage() {
   };
 
   useEffect(() => {
-    if (card) {
-      setBingoAchieved(checkBingo(card.tasks));
-    }
-  }, [card]);
-
+  if (card && checkBingo(card.tasks) && !bingoAchieved) {
+    setBingoAchieved(true);
+    fetch(`/api/bingocard/${card.id}`, {
+      method: "PATCH",
+      credentials: "include",
+    });
+  }
+}, [card]);
   return (
     <div className="w-full h-[130vh] py-5 mx-auto bg-[#fffde7] mt-[65px]">
       <div className=" pt-5 items-center relative z-0 w-full max-w-4xl mx-auto text-center">
