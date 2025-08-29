@@ -5,11 +5,12 @@ import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 import { getServerSession } from "next-auth/next";
 const openai = new OpenAI({
   baseURL: "https://openrouter.ai/api/v1",
-  apiKey: "process.env.OPENROUTER_API_KEY",
+  apiKey: process.env.OPENROUTER_API_KEY,
 });
 async function GenerateTask() {
+  try{
   const completion = await openai.chat.completions.create({
-    model: "deepen/deepseek-v3.1-base",
+    model: "deepseek/deepseek-chat-v3.1:free",
     messages: [
       {
         role: "system",
@@ -20,31 +21,40 @@ async function GenerateTask() {
   });
 
   const result = completion.choices[0]?.message?.content?.trim();
-  let list: string[] = [];
-  list = JSON.parse(result);
-  return list;
+  if (!result) {
+    throw new Error("No response from OpenAI");
+  }
+  return JSON.parse(result);
+}catch(error){
+console.error("OpenAPI orJSON parsing error:", console);
+throw new Error("タスクの生成に失敗しました");
+}
+
 }
 
 
 export async function POST() {
-  const session = await getServerSession(authOptions);
-if (!session || !session.user) {
+  try{const session = await getServerSession(authOptions);
+    if (!session || !session.user?.id) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
-  const task = await GenerateTask();
+  
+  const tasks = await GenerateTask();
   const bingocardresult = await query(
-    `
-      INSERT INTO bingocards (date,userid,status) VALUES (NOW(),$1,ongoing)  
+    `INSERT INTO bingocards (date,userid,status) 
+      VALUES (NOW(),$1,"ongoing")  
       RETURNING id`,
-    [session.id]
+    [session.user.id]
   );
   const bingocardsid = bingocardresult.rows[0].id;
-  const values = task
-    .map((taskname, i) => [bingocardsid, taskname, i, false])
-    .flat();
-  const placeholders = task
+
+  const values = tasks
     .map(
-      (_, i) => `($${i * 4 + 1}, $${i * 4 + 2}, $${i * 4 + 3}, $${i * 4 + 4})`
+      (_taskname:string, i:number) => [bingocardsid, taskname, i, false])
+    .flat();
+  const placeholders = tasks
+    .map(
+      (_taskname:string, i:number) => `($${i * 4 + 1}, $${i * 4 + 2}, $${i * 4 + 3}, $${i * 4 + 4})`
     )
     .join(",");
   await query(
@@ -54,4 +64,10 @@ if (!session || !session.user) {
     `,
     values
   );
+  return NextResponse.json({id:bingocardsid }, { status: 200 });
+}catch (error){
+  console.error("POST /api/bingocard failed:", error);
+  return NextResponse.json({ error: "Internal Server Error" }, { status: 500 });
 }
+  }
+
