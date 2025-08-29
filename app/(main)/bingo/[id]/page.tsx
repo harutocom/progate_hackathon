@@ -1,7 +1,7 @@
 "use client";
 import React, { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
-
+import { useParams } from "next/navigation";
 type Task = {
   id: string;
   text: string;
@@ -13,43 +13,40 @@ type BingoCard = {
   createdAt: Date;
   tasks: Task[];
 };
-
-const initialTasks = [
-  "スイカ割りをする",
-  "線香花火をする",
-  "かき氷を食べる",
-  "海に行く",
-  "花火大会に行く",
-  "プールで遊ぶ",
-  "夏祭りに行く",
-  "キャンプをする",
-  "日焼け止めを塗る",
-];
-
 export default function BingoCreatePage() {
+  const params = useParams<{ id: string }>();
   const [card, setCard] = useState<BingoCard | null>(null);
   const [bingoAchieved, setBingoAchieved] = useState(false);
+  useEffect(() => {
+    const fetchCard = async () => {
+      const res = await fetch(`/api/bingocard/${params.id}`, {
+        method: "GET",
+        credentials: "include",
+      });
+      const data = await res.json();
+      setCard(data);
+    };
+    fetchCard();
+  }, [params.id]);
 
-  const generateCard = () => {
-    const tasks: Task[] = initialTasks
-      .sort(() => Math.random() - 0.5)
-      .slice(0, 9)
-      .map((text, index) => ({
-        id: `${index}`,
-        text,
-        done: false,
-      }));
-
-    setCard({
-      id: Date.now().toString(),
-      createdAt: new Date(),
-      tasks,
+  const generateCard = async () => {
+    const res = await fetch("/api/bingocard", {
+      method: "POST",
+      credentials: "include",
     });
+    const data = await res.json();
+    setCard(data);
     setBingoAchieved(false);
   };
 
-  const toggleTask = (taskId: string) => {
+  const toggleTask = async(taskId: string) => {
     if (!card) return;
+    await fetch(`/api/tasks/${taskId}`, {
+    method: "PATCH",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ iscompleted: true }),
+    credentials: "include",
+  });
     const newTasks = card.tasks.map((task) =>
       task.id === taskId ? { ...task, done: !task.done } : task
     );
@@ -71,11 +68,14 @@ export default function BingoCreatePage() {
   };
 
   useEffect(() => {
-    if (card) {
-      setBingoAchieved(checkBingo(card.tasks));
-    }
-  }, [card]);
-
+  if (card && checkBingo(card.tasks) && !bingoAchieved) {
+    setBingoAchieved(true);
+    fetch(`/api/bingocard/${card.id}`, {
+      method: "PATCH",
+      credentials: "include",
+    });
+  }
+}, [card,bingoAchieved]);
   return (
     <div className="w-full h-[130vh] py-5 mx-auto bg-[#fffde7] mt-[65px]">
       <div className=" pt-5 items-center relative z-0 w-full max-w-4xl mx-auto text-center">
