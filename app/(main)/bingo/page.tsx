@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
+import {useRouter} from "next/navigation";
 import Link from "next/link";
 
 type BingoCheckResponse = {
@@ -11,6 +12,7 @@ type BingoCheckResponse = {
 export default function BingoPage() {
   const [ongoing, setOngoing] = useState<boolean>(false);
   const [bingoId, setBingoId] = useState<string | null>(null);
+  const router = useRouter();
 
   useEffect(() => {
     const checkOngoing = async () => {
@@ -34,7 +36,7 @@ export default function BingoPage() {
     });
     const data = await res.json();
     // 新しいカードを作ったらそのページに飛ばす
-    window.location.href = `/bingo/${data.id}`;
+    router.push(`/bingo/${data.id}`);
   };
 
   return (

@@ -19,7 +19,7 @@ export default function LoginPage() {
     });
 
     if (result?.ok) {
-      router.push("/profile");
+      router.push("/bingo");
     } else {
       alert("ログインに失敗しました。もう一度お試しください。");
       console.error("ログイン失敗...");
@@ -54,7 +54,7 @@ export default function LoginPage() {
             Log In
           </Button>
           <p className="text-sm text-gray-500">
-            Don&apos;t have an account?{" "}
+            Don&apos;t have an account?
             <a href="/setup" className="text-blue-500">
               Sign up
             </a>

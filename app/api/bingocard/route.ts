@@ -15,7 +15,7 @@ async function GenerateTask() {
       {
         role: "system",
         content:
-          'あなたは意地悪なタスク生成アシスタントです。居酒屋でできる飲みゲーの罰ゲームの夏バージョンを10文字以内で9個生成して日本語でJSON配列（例: ["タスク1", "タスク2", ...]）で返してください。',
+          'あなたは意地悪なタスク生成アシスタントです。居酒屋でできる飲みゲーの罰ゲームの夏バージョンを10文字以内で9個生成して日本語でJSON配列（例: ["タスク1", "タスク2", ...]）で返してください。説明、指示、メタ解説は出力しません。生成されたJSON配列のみを出力します。',
       },
     ],
   });
@@ -24,12 +24,13 @@ async function GenerateTask() {
   if (!result) {
     throw new Error("No response from OpenAI");
   }
-  return JSON.parse(result);
+  const match = result.match(/\[[^\]]+\]/);
+  console.log(JSON.parse(match[0]));
+  return JSON.parse(match[0]);
 }catch(error){
 console.error("OpenAPI orJSON parsing error:", error);
 throw new Error("タスクの生成に失敗しました");
 }
-
 }
 
 
@@ -42,7 +43,7 @@ export async function POST() {
   const tasks = await GenerateTask();
   const bingocardresult = await query(
     `INSERT INTO bingocards (date,userid,status) 
-      VALUES (NOW(),$1,"ongoing")  
+      VALUES (NOW(),$1,'ongoing')  
       RETURNING id`,
     [session.user.id]
   );
@@ -50,21 +51,21 @@ export async function POST() {
 
   const values = tasks
     .map(
-      (taskname:string, i:number) => [bingocardsid, taskname, i, false])
+      (taskname:string, i:number) => [bingocardsid, taskname,false,i])
     .flat();
   const placeholders = tasks
     .map(
       (_taskname:string, i:number) => `($${i * 4 + 1}, $${i * 4 + 2}, $${i * 4 + 3}, $${i * 4 + 4})`
     )
     .join(",");
-  await query(
+    await query(
     `
       INSERT INTO tasks (bingocardsid, taskname, iscompleted, islocated)
       VALUES ${placeholders}
     `,
     values
   );
-  return NextResponse.json({id:bingocardsid }, { status: 200 });
+  return NextResponse.json({id: bingocardsid }, { status: 200 });
 }catch (error){
   console.error("POST /api/bingocard failed:", error);
   return NextResponse.json({ error: "Internal Server Error" }, { status: 500 });
