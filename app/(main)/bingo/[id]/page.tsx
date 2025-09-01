@@ -2,6 +2,7 @@
 import React, { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { useParams } from "next/navigation";
+import { useRouter } from "next/navigation";
 type Task = {
   id: string;
   text: string;
@@ -14,6 +15,7 @@ type BingoCard = {
   tasks: Task[];
 };
 export default function BingoCreatePage() {
+  const router = useRouter();
   const params = useParams<{ id: string }>();
   const [card, setCard] = useState<BingoCard | null>(null);
   const [bingoAchieved, setBingoAchieved] = useState(false);
@@ -34,19 +36,20 @@ export default function BingoCreatePage() {
       method: "POST",
       credentials: "include",
     });
-    const data = await res.json();
-    setCard(data);
-    setBingoAchieved(false);
+   const data = await res.json();
+    // 新しいカードを作ったらそのページに飛ばす
+    router.push(`/bingo/${data.id}`);
   };
 
   const toggleTask = async(taskId: string) => {
     if (!card) return;
+    /*
     await fetch(`/api/tasks/${taskId}`, {
     method: "PATCH",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ iscompleted: true }),
     credentials: "include",
-  });
+  });*/
     const newTasks = card.tasks.map((task) =>
       task.id === taskId ? { ...task, done: !task.done } : task
     );

@@ -21,7 +21,7 @@ export default function BingoPage() {
         credentials: "include",
       });
       const data: BingoCheckResponse = await res.json();
-      if (data.ongoing) {
+      if (data.ongoing===true) {
         setOngoing(true);
         setBingoId(data.bingoId || null);
       }

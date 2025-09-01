@@ -25,6 +25,9 @@ async function GenerateTask() {
     throw new Error("No response from OpenAI");
   }
   const match = result.match(/\[[^\]]+\]/);
+  if (!match) {
+    throw new Error("Invalid response format");
+  }
   console.log(JSON.parse(match[0]));
   return JSON.parse(match[0]);
 }catch(error){
