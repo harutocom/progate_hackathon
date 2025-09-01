@@ -3,17 +3,17 @@
 import React, { useEffect, useState } from "react";
 import {useRouter} from "next/navigation";
 import Link from "next/link";
-
+// ビンゴカードが進行中かどうかを確認するレスポンスの型
 type BingoCheckResponse = {
   ongoing: boolean;
   bingoId?: string;
 };
-
+//  ビンゴカードページ
 export default function BingoPage() {
   const [ongoing, setOngoing] = useState<boolean>(false);
   const [bingoId, setBingoId] = useState<string | null>(null);
   const router = useRouter();
-
+// ページが生成されたときに進行中のビンゴカードをチェック
   useEffect(() => {
     const checkOngoing = async () => {
       const res = await fetch("/api/bingocard/ongoing", {
@@ -28,7 +28,7 @@ export default function BingoPage() {
     };
     checkOngoing();
   }, []);
-
+// 新しいビンゴカードを作成する関数
   const handleCreateBingoCard = async () => {
     const res = await fetch("/api/bingocard", {
       method: "POST",

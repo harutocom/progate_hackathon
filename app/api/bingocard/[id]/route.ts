@@ -3,20 +3,24 @@ import { NextResponse ,NextRequest} from "next/server";
 import { query } from "@/lib/db";
 import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 import { getServerSession } from "next-auth/next";
-
+// ビンゴカードの情報を取得する
 export async function GET(
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
   try{    
+    // 認証チェック
     const session = await getServerSession(authOptions);
     if (!session || !session.user) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
+    // パラメータからカードIDを取得
     const {id} =await params;
     const cardID=parseInt(id,10);
+    //  IDが数値でない場合のエラーハンドリング
     if (isNaN(cardID)){
       return NextResponse.json({error:"Invalid ID format"},{status:400});}
+      // カードの所有者が現在のユーザーであることを確認
       const cardResult=await query(
         `SELECT id,date FROM bingocards WHERE id=$1`,
         [cardID]
@@ -26,21 +30,21 @@ export async function GET(
         return NextResponse.json({error:"Card not found"},{status:404});
       }
 
-
+  // タスクを取得
   const tasksResult = await query(`SELECT id,taskname AS text,iscompleted AS done  FROM tasks WHERE bingocardsid=$1 ORDER BY islocated ASC`, [cardID]);
   const responseData={
     id:cardData.id.toString(),
     date:cardData.date,
     tasks:tasksResult.rows,
   };
-
+// レスポンスを返す
   return NextResponse.json(responseData);
   } catch (error) {
     console.error("GET /api/bingocard/[id] error:", error);
     return NextResponse.json({ error: "Internal Server Error" }, { status: 500 });
   }
 }
-
+//  ビンゴカードの状態を'completed'に更新する
 export async function PATCH(request:NextRequest ,{ params }: { params:Promise< { id: string }>}) {
 try{
 const session = await getServerSession(authOptions);

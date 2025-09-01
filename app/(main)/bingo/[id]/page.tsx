@@ -14,11 +14,13 @@ type BingoCard = {
   createdAt: Date;
   tasks: Task[];
 };
+//  ビンゴカード作成ページ
 export default function BingoCreatePage() {
   const router = useRouter();
   const params = useParams<{ id: string }>();
   const [card, setCard] = useState<BingoCard | null>(null);
   const [bingoAchieved, setBingoAchieved] = useState(false);
+  // ビンゴカードの情報を取得
   useEffect(() => {
     const fetchCard = async () => {
       const res = await fetch(`/api/bingocard/${params.id}`, {
@@ -29,7 +31,7 @@ export default function BingoCreatePage() {
       setCard(data);
     };
     fetchCard();
-  }, [params.id]);
+  }, []);
 
   const generateCard = async () => {
     const res = await fetch("/api/bingocard", {
@@ -40,7 +42,7 @@ export default function BingoCreatePage() {
     // 新しいカードを作ったらそのページに飛ばす
     router.push(`/bingo/${data.id}`);
   };
-
+//  タスクの完了状態を切り替える関数
   const toggleTask = async(taskId: string) => {
     if (!card) return;
     
@@ -57,7 +59,7 @@ export default function BingoCreatePage() {
     credentials: "include",
   });
   };
-
+//  ビンゴ達成をチェックする関数
   const checkBingo = (tasks: Task[]) => {
     const lines = [
       [0, 1, 2],
@@ -71,7 +73,7 @@ export default function BingoCreatePage() {
     ];
     return lines.some((line) => line.every((i) => tasks[i].done));
   };
-
+ // ビンゴ達成を監視し、達成したらカードの状態を更新
   useEffect(() => {
   if (card && checkBingo(card.tasks) && !bingoAchieved) {
     setBingoAchieved(true);

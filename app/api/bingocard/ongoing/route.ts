@@ -2,7 +2,7 @@ import { NextResponse,NextRequest } from "next/server";
 import { query } from "@/lib/db";
 import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 import { getServerSession } from "next-auth/next";
-
+// 進行中のビンゴカードがあるか確認するエンドポイント
 export async function GET() {
   try{
     const session = await getServerSession(authOptions);

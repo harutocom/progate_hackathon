@@ -3,10 +3,12 @@ import OpenAI from "openai";
 import { query } from "@/lib/db";
 import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 import { getServerSession } from "next-auth/next";
+// ビンゴカードの新規作成とタスク生成
 const openai = new OpenAI({
   baseURL: "https://openrouter.ai/api/v1",
   apiKey: process.env.OPENROUTER_API_KEY,
 });
+//  タスクを生成する関数
 async function GenerateTask() {
   try{
   const completion = await openai.chat.completions.create({
@@ -19,7 +21,7 @@ async function GenerateTask() {
       },
     ],
   });
-
+//  レスポンスの解析
   const result = completion.choices[0]?.message?.content?.trim();
   if (!result) {
     throw new Error("No response from OpenAI");
@@ -36,14 +38,15 @@ throw new Error("タスクの生成に失敗しました");
 }
 }
 
-
+//  新しいビンゴカードを作成するエンドポイント
 export async function POST() {
   try{const session = await getServerSession(authOptions);
     if (!session || !session.user?.id) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
-  
+  //  タスクを生成
   const tasks = await GenerateTask();
+  // ビンゴカードをDBに保存
   const bingocardresult = await query(
     `INSERT INTO bingocards (date,userid,status) 
       VALUES (NOW(),$1,'ongoing')  
@@ -68,6 +71,7 @@ export async function POST() {
     `,
     values
   );
+  // 作成したカードのIDを返す
   return NextResponse.json({id: bingocardsid }, { status: 200 });
 }catch (error){
   console.error("POST /api/bingocard failed:", error);
