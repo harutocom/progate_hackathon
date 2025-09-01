@@ -13,23 +13,23 @@ export async function PATCH(
     }
     const body = await request.json();
     const iscompleted:boolean=body.iscompleted;
+    const bingocardid:string=body.bingocardid;
     if (typeof iscompleted !== "boolean") {
     return NextResponse.json({ error: "Invalid 'iscompleted' value" }, { status: 400 });
     }
-    const{id :taskId}=await params;
-    const userID=session.user.id;
+    const{id:taskId}=await params;
     const result = await query(
-    `UPDATE tasks t 
-     SET iscompleted=$1 
-     WHERE id=$2 
-     AND t.bingocards bc.id
-     AND bc.userid=$3`,
-    [iscompleted, taskId,userID]
+    `UPDATE tasks 
+     SET iscompleted=$1
+     WHERE id=$2
+     AND bingocardsid=$3
+     `,
+    [iscompleted, taskId, bingocardid]
   );
   if (result.rowCount === 0) {
     return NextResponse.json({ error: "Task not found or unauthorized" }, { status: 404 });
   }
-  return NextResponse.json({ success: true });
+  return NextResponse.json({ success: true }, { status: 200 });
 }catch(error){
 console.error("PATCH /api/tasks/[id] failed:", error);
 return NextResponse.json({ error: "Internal Server Error" }, { status: 500 });

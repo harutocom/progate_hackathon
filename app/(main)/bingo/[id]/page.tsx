@@ -43,17 +43,19 @@ export default function BingoCreatePage() {
 
   const toggleTask = async(taskId: string) => {
     if (!card) return;
-    /*
+    
+    const newTasks = card.tasks.map((task) =>
+      task.id === taskId ? { ...task, done:!task.done } : task
+    );
+    setCard({ ...card, tasks: newTasks });
+    const toggledTask = newTasks.find((task) => task.id === taskId);
+    if (!toggledTask) return;
     await fetch(`/api/tasks/${taskId}`, {
     method: "PATCH",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ iscompleted: true }),
+    body: JSON.stringify({ iscompleted:toggledTask.done,bingocardid:card.id }),
     credentials: "include",
-  });*/
-    const newTasks = card.tasks.map((task) =>
-      task.id === taskId ? { ...task, done: !task.done } : task
-    );
-    setCard({ ...card, tasks: newTasks });
+  });
   };
 
   const checkBingo = (tasks: Task[]) => {
