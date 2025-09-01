@@ -95,7 +95,7 @@ export default function BingoCreatePage() {
       </div>
 
       <div className="pt-3 flex flex-col items-center justify-center">
-        {!card || bingoAchieved ? (
+        {bingoAchieved ? (
           <Button
             className="bg-[#0D80F2] text-white w-[480px] h-[48px] rounded-[8px] hover:bg-[#0D80F2]/90"
             onClick={generateCard}
@@ -103,9 +103,9 @@ export default function BingoCreatePage() {
             新しいビンゴカードを生成
           </Button>
         ) : null}
-        {bingoAchieved && (
+        {bingoAchieved ? (
           <p className="text-3xl font-bold text-[#FFD700] mt-4">🎉 ビンゴ 🎉</p>
-        )}
+        ) : null}
       </div>
 
       {card && (
