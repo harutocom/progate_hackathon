@@ -8,7 +8,7 @@ type BingoCard = {
 };
 
 export default function BingoPage() {
-  const [card, setCard] = useState<BingoCard | null>(null);
+  const [card] = useState<BingoCard | null>(null);
 
   return (
     <div className="w-[max] max-w-[max] h-[130vh] py-5 mx-auto  bg-[#fffde7]">

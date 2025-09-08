@@ -3,9 +3,10 @@ import { query } from "@/lib/db";
 
 export async function GET(
   request: Request,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
-  const userId = parseInt(params.id, 10);
+  const { id } = await params;
+  const userId = parseInt(id, 10);
 
   try {
     const result = await query(
