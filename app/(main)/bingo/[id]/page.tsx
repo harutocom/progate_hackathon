@@ -1,7 +1,8 @@
 "use client";
 import React, { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
-
+import { useParams } from "next/navigation";
+import { useRouter } from "next/navigation";
 type Task = {
   id: string;
   text: string;
@@ -13,49 +14,52 @@ type BingoCard = {
   createdAt: Date;
   tasks: Task[];
 };
-
-const initialTasks = [
-  "スイカ割りをする",
-  "線香花火をする",
-  "かき氷を食べる",
-  "海に行く",
-  "花火大会に行く",
-  "プールで遊ぶ",
-  "夏祭りに行く",
-  "キャンプをする",
-  "日焼け止めを塗る",
-];
-
+//  ビンゴカード作成ページ
 export default function BingoCreatePage() {
+  const router = useRouter();
+  const params = useParams<{ id: string }>();
   const [card, setCard] = useState<BingoCard | null>(null);
   const [bingoAchieved, setBingoAchieved] = useState(false);
+  // ビンゴカードの情報を取得
+  useEffect(() => {
+    const fetchCard = async () => {
+      const res = await fetch(`/api/bingocard/${params.id}`, {
+        method: "GET",
+        credentials: "include",
+      });
+      const data = await res.json();
+      setCard(data);
+    };
+    fetchCard();
+  }, []);
 
-  const generateCard = () => {
-    const tasks: Task[] = initialTasks
-      .sort(() => Math.random() - 0.5)
-      .slice(0, 9)
-      .map((text, index) => ({
-        id: `${index}`,
-        text,
-        done: false,
-      }));
-
-    setCard({
-      id: Date.now().toString(),
-      createdAt: new Date(),
-      tasks,
+  const generateCard = async () => {
+    const res = await fetch("/api/bingocard", {
+      method: "POST",
+      credentials: "include",
     });
-    setBingoAchieved(false);
+   const data = await res.json();
+    // 新しいカードを作ったらそのページに飛ばす
+    router.push(`/bingo/${data.id}`);
   };
-
-  const toggleTask = (taskId: string) => {
+//  タスクの完了状態を切り替える関数
+  const toggleTask = async(taskId: string) => {
     if (!card) return;
+    
     const newTasks = card.tasks.map((task) =>
-      task.id === taskId ? { ...task, done: !task.done } : task
+      task.id === taskId ? { ...task, done:!task.done } : task
     );
     setCard({ ...card, tasks: newTasks });
+    const toggledTask = newTasks.find((task) => task.id === taskId);
+    if (!toggledTask) return;
+    await fetch(`/api/tasks/${taskId}`, {
+    method: "PATCH",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ iscompleted:toggledTask.done,bingocardid:card.id }),
+    credentials: "include",
+  });
   };
-
+//  ビンゴ達成をチェックする関数
   const checkBingo = (tasks: Task[]) => {
     const lines = [
       [0, 1, 2],
@@ -69,13 +73,16 @@ export default function BingoCreatePage() {
     ];
     return lines.some((line) => line.every((i) => tasks[i].done));
   };
-
+ // ビンゴ達成を監視し、達成したらカードの状態を更新
   useEffect(() => {
-    if (card) {
-      setBingoAchieved(checkBingo(card.tasks));
-    }
-  }, [card]);
-
+  if (card && checkBingo(card.tasks) && !bingoAchieved) {
+    setBingoAchieved(true);
+    fetch(`/api/bingocard/${card.id}`, {
+      method: "PATCH",
+      credentials: "include",
+    });
+  }
+}, [card,bingoAchieved]);
   return (
     <div className="w-full h-[130vh] py-5 mx-auto bg-[#fffde7] mt-[65px]">
       <div className=" pt-5 items-center relative z-0 w-full max-w-4xl mx-auto text-center">
@@ -88,7 +95,7 @@ export default function BingoCreatePage() {
       </div>
 
       <div className="pt-3 flex flex-col items-center justify-center">
-        {!card || bingoAchieved ? (
+        {bingoAchieved ? (
           <Button
             className="bg-[#0D80F2] text-white w-[480px] h-[48px] rounded-[8px] hover:bg-[#0D80F2]/90"
             onClick={generateCard}
@@ -96,9 +103,9 @@ export default function BingoCreatePage() {
             新しいビンゴカードを生成
           </Button>
         ) : null}
-        {bingoAchieved && (
+        {bingoAchieved ? (
           <p className="text-3xl font-bold text-[#FFD700] mt-4">🎉 ビンゴ 🎉</p>
-        )}
+        ) : null}
       </div>
 
       {card && (

@@ -8,5 +8,5 @@ export default withAuth({
 });
 
 export const config = {
-  matcher: ["/profile"], // 認証必須にしたいルート
+  matcher: ["/profile/:path*", "/bingo/:path*"],
 };
