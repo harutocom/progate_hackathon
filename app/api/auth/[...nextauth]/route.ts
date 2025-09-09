@@ -1,4 +1,4 @@
-import NextAuth, {NextAuthOptions} from "next-auth";
+import NextAuth, { NextAuthOptions } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 import { query } from "@/lib/db";
 import bcrypt from "bcrypt";
@@ -9,7 +9,6 @@ export const authOptions: NextAuthOptions = {
   },
   providers: [
     CredentialsProvider({
-      name: "Credentials",
       credentials: {
         username: { label: "Username", type: "text" },
         password: { label: "Password", type: "password" },
@@ -18,20 +17,16 @@ export const authOptions: NextAuthOptions = {
         if (!credentials?.username || !credentials.password) {
           return null;
         }
-
         const { rows } = await query(
           'SELECT * FROM "user" WHERE username = $1',
           [credentials.username]
         );
         const user = rows[0];
-
         if (!user) return null;
-
         const isPasswordCorrect = await bcrypt.compare(
           credentials.password,
           user.password
         );
-
         if (isPasswordCorrect) {
           return {
             id: user.id.toString(),
@@ -39,7 +34,6 @@ export const authOptions: NextAuthOptions = {
             email: user.email,
           };
         }
-
         return null;
       },
     }),
@@ -58,7 +52,6 @@ export const authOptions: NextAuthOptions = {
       return session;
     },
   },
-
   pages: {
     signIn: "/login",
   },
