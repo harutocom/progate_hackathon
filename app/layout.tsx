@@ -30,6 +30,7 @@ export const metadata: Metadata = {
     url: siteUrl,
     images: [
       {
+        // NOTE: Ensure that 'og-image.png' exists in the 'public' directory at the project root.
         url: `${siteUrl}/og-image.png`,
       },
     ],
