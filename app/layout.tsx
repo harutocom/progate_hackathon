@@ -19,7 +19,7 @@ const plusJakartaSans = Plus_Jakarta_Sans({
   variable: "--font-plus-jakarta-sans",
 });
 
-const siteUrl = "https://progate-hackathon-delta.vercel.app/";
+const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://progate-hackathon-delta.vercel.app/";
 
 export const metadata: Metadata = {
   title: "夏休みToDoビンゴ",
