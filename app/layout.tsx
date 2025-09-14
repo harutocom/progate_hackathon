@@ -25,7 +25,14 @@ export const metadata: Metadata = {
   title: "夏休みToDoビンゴ",
   description: "夏休みの暇つぶしアプリ。",
   openGraph: {
+    title: "夏休みToDoビンゴ",
+    description: "夏休みの暇つぶしアプリ。",
     url: siteUrl,
+    images: [
+      {
+        url: `${siteUrl}/og-image.png`,
+      },
+    ],
   },
 };
 
